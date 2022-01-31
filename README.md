@@ -10,7 +10,7 @@ When your application is proxied with many different domains and prefixes you mi
 
 ### Example
 
-You application is hosted on `example.com` and you have 2 known entrypoints (proxies) for this application:
+Your application is hosted on `example.com` and you have 2 known entrypoints (proxies) for this application:
 ```
 app.test.com/ui/app -> example.com
 app2.io/ui/test/entrypoint -> example.com
