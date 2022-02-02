@@ -47,6 +47,7 @@ new HtmlWebpackPlugin({
   // ...,
 - publicPath: '/',
 + publicPath: 'auto', // assets paths must be relative
++ base: '/' // same as fallbackBaseHref, see https://github.com/jantimon/html-webpack-plugin#base-tag
 }),
 ```
 
@@ -68,7 +69,7 @@ plugins: [
 ]
 ```
 
-It will inject `<script></script>` in your `index.html`. This script compares current `window.location.pathname` and provided `publicPaths`. Then it inserts `<base href="...">` if we have a match. Otherwise it inserts *fallbackBaseHref* value in `<base href="...">`
+It will inject `<script></script>` in your `index.html`. This script compares current `window.location.pathname` and provided `publicPaths`. Then it updates `<base href="...">` if we have a match. Otherwise it sets *fallbackBaseHref* value in your `<base href="...">`
 
 Plugin **leaves your template untouched** if `fallbackBaseHref` and `publicPaths` options are not provided.
 
@@ -146,6 +147,8 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base#browser_compatibi
 # References
 
 https://www.npmjs.com/package/base-href-webpack-plugin
+
+https://github.com/jantimon/html-webpack-plugin#base-tag
 
 # Contribution
 
