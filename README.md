@@ -76,27 +76,29 @@ Plugin **leaves your template untouched** if `fallbackBaseHref` and `publicPaths
 
 You might want to use `publicPaths` to prepare your application router (`react-router`, `vue-router`, etc.)
 
-#### Example with react-router
+<details>
+  <summary>Example with react-router</summary>
 
-```jsx
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { publicPaths, fallbackBaseHref } from './lib/constants/config'; // use same variable as publicPaths in you webpack.config.js
+  ```jsx
+  import * as React from 'react';
+  import * as ReactDOM from 'react-dom';
+  import { BrowserRouter as Router } from 'react-router-dom';
+  import { publicPaths, fallbackBaseHref } from './lib/constants/config'; // use same variable as publicPaths in you webpack.config.js
 
-const App = ({ basename }) => {
-  <Router basename={basename}>
-    {/* ... your app content ... */}
-  </Router>
-}
+  const App = ({ basename }) => {
+    <Router basename={basename}>
+      {/* ... your app content ... */}
+    </Router>
+  }
 
-const getBasename = (pathname) => {
-  const publicPath = publicPaths.find(publicPath => pathname.includes(publicPath.replace(/\/$/, '')));
-  return publicPath || fallbackBaseHref;
-}
+  const getBasename = (pathname) => {
+    const publicPath = publicPaths.find(publicPath => pathname.includes(publicPath.replace(/\/$/, '')));
+    return publicPath || fallbackBaseHref;
+  }
 
-ReactDOM.render(<App basename={getBasename(window.location.pathname)} />, document.getElementById('#app'));
-```
+  ReactDOM.render(<App basename={getBasename(window.location.pathname)} />, document.getElementById('#app'));
+  ```
+</details>
 
 # Caveats
 
