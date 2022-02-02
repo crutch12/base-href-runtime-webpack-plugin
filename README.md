@@ -1,6 +1,6 @@
 # base-href-runtime-webpack-plugin
 
-Extension for [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin) to programmatically insert or update `<base href="...">` tag **in runtime** depending on *window.location.pathname*.
+Extension for [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin) to programmatically insert or update [`<base href="...">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) tag **in runtime** depending on *window.location.pathname*.
 
 It inserts inline `<script>` in you `index.html` output which generates `<base href="...">`
 
@@ -97,6 +97,49 @@ const getBasename = (pathname) => {
 
 ReactDOM.render(<App basename={getBasename(window.location.pathname)} />, document.getElementById('#app'));
 ```
+
+# Caveats
+
+<details>
+  <summary>Excessive requests (duplicated requests)</summary>
+
+  https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work#preload_scanner
+
+
+  > The preload scanner will parse through the content available and request high priority resources like CSS, JavaScript, and web fonts. <...> It will retrieve resources in the background so that by the time the main HTML parser reaches requested assets, they may possibly already be in flight, or have been downloaded.
+
+
+  It means that a browser requests all page's resources before you execute any `<script>`. So if your `<base href="...">` tag is being changed by the `<script>` then your browser will **repeat these requests again**.
+
+  Example:
+  ```html
+<html>
+  <head>
+    <base href="/unknown/">
+    <script type="text/javascript">
+      console.log('Initial document.baseURI:', document.baseURI);
+      document.querySelector('base').href = '/'
+      console.log('New document.baseURI:', document.baseURI);
+    </script>
+    <script src="js/index.js"></script>
+
+    <!-- @NOTE: I don't know why, but Chrome won't request script below again even after baseURI change -->
+    <!-- <script src="js/index.js" />-->
+    <!-- So <script src="..." /> and <script src="..."></script> have different behaviour (WTF?!) -->
+  </head>
+</html>
+  ```
+  
+  Chrome's Network tab result (`js/index.js` request duplicated):
+
+  <img width="676" alt="chrome_LmDvH3YJzy" src="https://user-images.githubusercontent.com/19373212/152134966-5cd1699b-4951-4a41-bb3a-2a733b1ac754.png">
+</details>
+
+# Supported browsers
+
+All modern browsers, even IE7
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base#browser_compatibility
 
 # References
 
