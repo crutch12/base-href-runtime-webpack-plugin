@@ -20,12 +20,12 @@ So you want to open `app.test.com/ui/app` and resolve `index.js` request to `app
 
 For this purpose you want to generate different `<base>` tag:
 ```html
-<!-- for app.test.com/ui/app (/ui/app) -->
+<!-- for app.test.com/ui/app/ (/ui/app/) -->
 <base href="/ui/app">
 <script src="index.js" /> <!-- /ui/app/index.js -->
 
-<!-- for app2.io/ui/test/entrypoint (/ui/test/entrypoint) -->
-<base href="/ui/test/entrypoint">
+<!-- for app2.io/ui/test/entrypoint (/ui/test/entrypoint/) -->
+<base href="/ui/test/entrypoint/">
 <script src="index.js" /> <!-- /ui/test/entrypoint/index.js -->
 ```
 
@@ -60,7 +60,7 @@ plugins: [
   // ...,
   new BaseHrefRuntimeWebpackPlugin({
     fallbackBaseHref: '/', // in case when we didn't match location.pathname 
-    publicPaths: [ // availabled prefixes
+    publicPaths: [ // availabled prefixes. Order is important!
       '/ui/app/', // <base href="/ui/app/">
       '/ui/test/entrypoint/', // <base href="/ui/test/entrypoint/">
       '/a/b/c/d/e/', // <base href="/a/b/c/d/e/">
