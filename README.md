@@ -21,7 +21,7 @@ So you want to open `app.test.com/ui/app` and resolve `index.js` request to `app
 For this purpose you want to generate different `<base>` tag:
 ```html
 <!-- for app.test.com/ui/app/ (/ui/app/) -->
-<base href="/ui/app">
+<base href="/ui/app/">
 <script src="index.js" /> <!-- /ui/app/index.js -->
 
 <!-- for app2.io/ui/test/entrypoint (/ui/test/entrypoint/) -->
