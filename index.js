@@ -25,8 +25,9 @@ const scriptTemplate = fs.readFileSync(__dirname + '/script.ejs', 'utf8');
 
     compiler.hooks.compilation.tap('BaseHrefRuntimeWebpackPlugin', (compilation) => {
       HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('BaseHrefRuntimeWebpackPlugin', (data, callback) => {
-        if (data.plugin.options.base === undefined) {
-          console.warn('You didn\'t specify "base" field in html-webpack-plugin');
+        if (!data.plugin.options.base) {
+          const logger = compiler.getInfrastructureLogger('BaseHrefRuntimeWebpackPlugin');
+          logger.warn('You didn\'t specify "base" field in html-webpack-plugin');
         }
         const scriptHtml = template(scriptTemplate)({
           publicPaths: publicPaths,
