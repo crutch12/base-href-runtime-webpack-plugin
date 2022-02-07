@@ -1,5 +1,7 @@
 # base-href-runtime-webpack-plugin
 
+[![npm version](https://badge.fury.io/js/base-href-runtime-webpack-plugin.svg)](https://badge.fury.io/js/base-href-runtime-webpack-plugin)
+
 Extension for [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin) to programmatically insert or update [`<base href="...">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) tag **in runtime** depending on *window.location.pathname*.
 
 It inserts inline `<script>` in you `index.html` output which generates `<base href="...">`
