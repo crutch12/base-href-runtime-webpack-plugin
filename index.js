@@ -6,7 +6,7 @@ const schema = require('./schema.json');
 
 const scriptTemplate = fs.readFileSync(__dirname + '/script.ejs', 'utf8');
 
-export class BaseHrefRuntimeWebpackPlugin {
+ module.exports = class BaseHrefRuntimeWebpackPlugin {
   constructor(options) {
     validate(schema, options, {
       name: 'BaseHrefRuntimeWebpackPlugin',
@@ -33,7 +33,7 @@ export class BaseHrefRuntimeWebpackPlugin {
           fallbackBaseHref: fallbackBaseHref,
         });
         data.html = data.html.replace(/<head>/i, '$&' + `${scriptHtml}`);
-        return callback(null, data);
+        callback(null, data);
       });
     });
   }
