@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "publicPaths": {
+      "description": "available prefixes",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fallbackBaseHref": {
+      "description":  "in case when we didn't match location.pathname",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
