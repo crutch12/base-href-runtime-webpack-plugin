@@ -35,7 +35,7 @@ Thus `<base>` tag for the same `index.html` has to be generated **in runtime**.
 
 # Installation
 
-For webpack v5 use latest (^1.0.0):  
+For webpack v5 use latest (^1.1.0):  
 `npm i --save-dev base-href-runtime-webpack-plugin`
 
 # Usage
