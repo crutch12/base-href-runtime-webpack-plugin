@@ -4,7 +4,7 @@
 
 Extension for [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin) to programmatically insert or update [`<base href="...">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) tag **in runtime** depending on *window.location.pathname*.
 
-It inserts inline `<script>` in you `index.html` output which generates `<base href="...">`
+It inserts inline `<script>` in your `index.html` output which generates (rewrites) `<base href="...">`
 
 # Why
 
