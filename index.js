@@ -6,7 +6,7 @@ const schema = require('./schema.json');
 
 const scriptTemplate = fs.readFileSync(__dirname + '/script.ejs', 'utf8');
 
- module.exports = class BaseHrefRuntimeWebpackPlugin {
+module.exports = class BaseHrefRuntimeWebpackPlugin {
   constructor(options) {
     validate(schema, options, {
       name: 'BaseHrefRuntimeWebpackPlugin',
@@ -23,17 +23,39 @@ const scriptTemplate = fs.readFileSync(__dirname + '/script.ejs', 'utf8');
       return;
     }
 
+    const logger = compiler.getInfrastructureLogger('BaseHrefRuntimeWebpackPlugin');
+    const scriptTemplateFunction = template(scriptTemplate);
+
     compiler.hooks.compilation.tap('BaseHrefRuntimeWebpackPlugin', (compilation) => {
-      HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('BaseHrefRuntimeWebpackPlugin', (data, callback) => {
+      HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync('BaseHrefRuntimeWebpackPlugin', (data, callback) => {
         if (!data.plugin.options.base) {
-          const logger = compiler.getInfrastructureLogger('BaseHrefRuntimeWebpackPlugin');
           logger.warn('You didn\'t specify "base" field in html-webpack-plugin');
         }
-        const scriptHtml = template(scriptTemplate)({
+
+        const baseTagIndex = data.headTags.findIndex(tag => tag.tagName === 'base');
+        const targetIndex = baseTagIndex === -1 ? 0 : (baseTagIndex + 1);
+
+        const scriptInnerHTML = scriptTemplateFunction({
           publicPaths: publicPaths,
           fallbackBaseHref: fallbackBaseHref,
         });
-        data.html = data.html.replace(/<head>/i, '$&' + `${scriptHtml}`);
+
+        data.headTags = [
+          ...data.headTags.slice(0, targetIndex),
+          // @NOTE: Insert our script
+          {
+            tagName: 'script',
+            voidTag: false,
+            meta: { plugin: 'base-href-runtime-webpack-plugin' },
+            attributes: {
+              type: 'text/javascript',
+              'data-name': 'base-href-runtime-webpack-plugin',
+            },
+            innerHTML: scriptInnerHTML,
+          },
+          ...data.headTags.slice(targetIndex)
+        ];
+
         callback(null, data);
       });
     });
