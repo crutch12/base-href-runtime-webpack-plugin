@@ -95,6 +95,9 @@ You might want to use `publicPaths` to prepare your application router (`react-r
   }
 
   const getBasename = (pathname) => {
+    // @NOTE: You may straightaway return baseURI
+    // return document.baseURI;
+
     const publicPath = publicPaths.find(publicPath => pathname.includes(publicPath.replace(/\/$/, '')));
     return publicPath || fallbackBaseHref;
   }
