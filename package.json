@@ -1,33 +1,20 @@
 {
-  "name": "base-href-runtime-webpack-plugin",
+  "name": "base-href-runtime-vite-plugin",
   "version": "1.1.0",
   "main": "index.js",
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/crutch12/base-href-runtime-webpack-plugin.git"
+    "url": "https://github.com/web-bee-ru/base-href-runtime-vite-plugin"
   },
   "keywords": [
     "base",
     "href",
-    "webpack",
+    "vite",
     "plugin"
   ],
   "scripts": {
     "test": "cd ./test && webpack"
   },
-  "license": "MIT",
-  "peerDependencies": {
-    "html-webpack-plugin": ">=4.0.0",
-    "webpack": ">=4.0.0"
-  },
-  "devDependencies": {
-    "html-webpack-plugin": "5.5",
-    "webpack": "^5.23.0",
-    "webpack-cli": "^4.9.2"
-  },
-  "dependencies": {
-    "lodash.template": "^4.5.0",
-    "schema-utils": "^4.0.0"
-  }
+  "license": "MIT"
 }

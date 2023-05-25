@@ -1,63 +1,44 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const template = require('lodash.template');
-const fs = require('fs');
-const { validate } = require('schema-utils');
-const schema = require('./schema.json');
+export default function baseHrefRuntimeVitePlugin(options) {
+  const { fallbackBaseHref, publicPaths } = options;
 
-const scriptTemplate = fs.readFileSync(__dirname + '/script.ejs', 'utf8');
-
-module.exports = class BaseHrefRuntimeWebpackPlugin {
-  constructor(options) {
-    validate(schema, options, {
-      name: 'BaseHrefRuntimeWebpackPlugin',
-      baseDataPath: 'options',
-    });
-    this.options = options;
+  if (publicPaths.length === 0 && !fallbackBaseHref) {
+    return;
   }
 
-  apply(compiler) {
-    const publicPaths = (this.options.publicPaths || []).filter(Boolean);
-    const fallbackBaseHref = this.options.fallbackBaseHref;
+  const scriptTemplateFunction = `(function () {
+        var publicPaths = [${publicPaths.map(
+          (path) => "'" + path + "'"
+        )}] || [];
+        var fallbackBaseHref = '${fallbackBaseHref}' ? '${fallbackBaseHref}' : 'undefined';
 
-    if (publicPaths.length === 0 && !fallbackBaseHref) {
-      return;
-    }
+        const base = document.createElement("base")
 
-    const logger = compiler.getInfrastructureLogger('BaseHrefRuntimeWebpackPlugin');
-    const scriptTemplateFunction = template(scriptTemplate);
+        document.head.append(base)
 
-    compiler.hooks.compilation.tap('BaseHrefRuntimeWebpackPlugin', (compilation) => {
-      HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync('BaseHrefRuntimeWebpackPlugin', (data, callback) => {
-        if (!data.plugin.options.base) {
-          logger.warn('You didn\'t specify "base" field in html-webpack-plugin');
-        }
+        document.querySelector('base').href = publicPaths.find(
+            (path) => window.location.pathname.includes(path)
+        ) || fallbackBaseHref || document.baseURI})();`;
 
-        const baseTagIndex = data.headTags.findIndex(tag => tag.tagName === 'base');
-        const targetIndex = baseTagIndex === -1 ? 0 : (baseTagIndex + 1);
+  return {
+    name: "base-href-runtime-vite-plugin",
 
-        const scriptInnerHTML = scriptTemplateFunction({
-          publicPaths: publicPaths,
-          fallbackBaseHref: fallbackBaseHref,
-        });
-
-        data.headTags = [
-          ...data.headTags.slice(0, targetIndex),
-          // @NOTE: Insert our script
+    transformIndexHtml(html) {
+      return {
+        html: html,
+        tags: [
           {
-            tagName: 'script',
+            tag: "script",
             voidTag: false,
-            meta: { plugin: 'base-href-runtime-webpack-plugin' },
-            attributes: {
-              type: 'text/javascript',
-              'data-name': 'base-href-runtime-webpack-plugin',
+            injectTo: "head",
+            meta: { plugin: "base-href-runtime-webpack-plugin" },
+            attrs: {
+              type: "text/javascript",
+              "data-name": "base-href-runtime-webpack-plugin",
             },
-            innerHTML: scriptInnerHTML,
+            children: scriptTemplateFunction,
           },
-          ...data.headTags.slice(targetIndex)
-        ];
-
-        callback(null, data);
-      });
-    });
-  }
+        ],
+      };
+    },
+  };
 }

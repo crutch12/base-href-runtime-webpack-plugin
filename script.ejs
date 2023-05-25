@@ -1,9 +1,0 @@
-(function () {
-  var publicPaths = <%= JSON.stringify(publicPaths || []) %>;
-  var fallbackBaseHref = <%= fallbackBaseHref ? `'${fallbackBaseHref}'` : 'undefined' %>;
-  if (document.querySelector('base') === null)
-    return;
-  document.querySelector('base').href = publicPaths.filter(function (publicPath) {
-    return window.location.pathname.lastIndexOf(publicPath.replace(/\/$/, ''), 0) === 0;
-  })[0] || fallbackBaseHref || document.baseURI;
-})();
